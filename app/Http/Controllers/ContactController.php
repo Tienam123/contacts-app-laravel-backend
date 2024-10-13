@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\ContactsResourse;
 use App\Models\Contact;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
@@ -12,10 +13,26 @@ class ContactController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-       $contacts =  Contact::all();
-      return  ContactsResourse::collection($contacts);
+       $limit = $request['limit'] ?? 5;
+        $page = request('page', 1);
+        $items = Contact::paginate($limit);
+        return response()->json([
+            'data' => $items->items(),
+            'meta' => [
+                'current_page' => $items->currentPage(),
+                'last_page' => $items->lastPage(),
+                'per_page' => $items->perPage(),
+                'total' => $items->total(),
+            ],
+            'links' => [
+                'first_page_url' => $items->url(1),
+                'last_page_url' => $items->url($items->lastPage()),
+                'prev_page_url' => $items->previousPageUrl(),
+                'next_page_url' => $items->nextPageUrl(),
+            ]
+        ]);
 
     }
 

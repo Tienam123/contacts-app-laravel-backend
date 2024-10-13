@@ -1,12 +1,25 @@
 <script setup>
 import logo from '../assets/avatar.jpg'
 import ContactItem from "./ContactItem.vue";
-const emit = defineEmits(['change-current-contact'])
-const props = defineProps(['contacts'])
+import {onMounted, ref} from "vue";
+const emit = defineEmits(['change-current-contact','incrementpage'])
+const props = defineProps(['contacts','page','totalPage'])
+const buttonRef = ref(null)
 const changeCurrentContact =  (contact) => {
     emit('change-current-contact', contact)
 }
+const handleClickBtn = () => {
 
+}
+onMounted(() => {
+    observer.observe(buttonRef.value)
+})
+
+const observer = new IntersectionObserver((entries) => {
+    if (entries[0].isIntersecting) {
+        emit('incrementpage')
+    }
+})
 
 
 </script>
@@ -43,6 +56,9 @@ const changeCurrentContact =  (contact) => {
                 <ContactItem v-for="contact of contacts.value" :contact="contact" :key="contact.id" @change-current-contact="changeCurrentContact" />
             </ul>
         </div>
+       <div style="text-align: center;margin-top: 30px;">
+           <button ref="buttonRef" v-show="page < totalPage" @click="handleClickBtn" style="background:deepskyblue;padding: 10px 20px;border-radius: 12px">Load More...</button>
+       </div>
     </div>
 </template>
 
