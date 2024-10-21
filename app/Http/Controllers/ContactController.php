@@ -59,8 +59,7 @@ class ContactController extends Controller
             'image' => '',
             'is_favorite' => false,
         ];
-        $contact = Contact::create($data);
-        return response()->json(['data' => $contact]);
+        return response()->json($data);
     }
 
     /**
