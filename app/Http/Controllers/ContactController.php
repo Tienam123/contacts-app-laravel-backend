@@ -49,15 +49,6 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
-        $contact =  Contact::create([
-            'name' => 'Vladyslav',
-            'surname' => 'Test',
-            'email' => 'test@test.com',
-            'phone' => '1234567890',
-            'isFavorite' => false,
-            'image' => ''
-        ]);
-        return response()->json($contact);
     }
 
     /**
