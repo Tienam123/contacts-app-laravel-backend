@@ -41,7 +41,15 @@ class ContactController extends Controller
      */
     public function create()
     {
-      $contact =  Contact::create([
+
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $contact =  Contact::create([
             'name' => 'Vladyslav',
             'surname' => 'Test',
             'email' => 'test@test.com',
@@ -50,14 +58,6 @@ class ContactController extends Controller
             'image' => ''
         ]);
         return response()->json($contact);
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
     }
 
     /**
