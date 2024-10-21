@@ -2,6 +2,10 @@ FROM richarvey/nginx-php-fpm:latest
 
 COPY . .
 
+RUN chown -R www-data:www-data /var/www/html/storage
+RUN chown -R www-data:www-data /var/www/html/bootstrap/cache
+
+
 # Image config
 ENV SKIP_COMPOSER 1
 ENV WEBROOT /var/www/html/public
