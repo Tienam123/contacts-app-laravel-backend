@@ -16,7 +16,6 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $limit = $request['limit'] ?? 5;
-        $page = request('page', 1);
         $items = Contact::paginate($limit);
         return response()->json([
             'data' => $items->items(),
@@ -59,6 +58,7 @@ class ContactController extends Controller
             'image' => '',
             'is_favorite' => false,
         ];
+        Contact::create($data);
         return response()->json($data);
     }
 
