@@ -15,7 +15,7 @@ class ContactController extends Controller
      */
     public function index(Request $request)
     {
-       $limit = $request['limit'] ?? 5;
+        $limit = $request['limit'] ?? 5;
         $page = request('page', 1);
         $items = Contact::paginate($limit);
         return response()->json([
@@ -42,6 +42,7 @@ class ContactController extends Controller
     public function create()
     {
 
+
     }
 
     /**
@@ -49,6 +50,17 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+
+        $data = [
+            'name' => $request['name'],
+            'surname' => $request['surname'],
+            'email' => $request['email'],
+            'phone' => $request['phone'],
+            'image' => '',
+            'is_favorite' => false,
+        ];
+        $contact = Contact::create($data);
+        return response()->json(['data' => $contact]);
     }
 
     /**
@@ -86,16 +98,16 @@ class ContactController extends Controller
     public function uploadImage(Request $request)
     {
 
-       $contact = Contact::findOrFail($request['id']);
+        $contact = Contact::findOrFail($request['id']);
 
         Storage::disk('public')->deleteDirectory('/images/avatars/' . $request['id']);
-       $path = Storage::disk('public')->put('/images/avatars/'.$request['id'], $request->file('image'));
+        $path = Storage::disk('public')->put('/images/avatars/' . $request['id'], $request->file('image'));
 
         if ($contact) {
             $contact->image = $path;
             $contact->save();
         }
 
-       return url('storage/' .$path);
+        return url('storage/' . $path);
     }
 }
