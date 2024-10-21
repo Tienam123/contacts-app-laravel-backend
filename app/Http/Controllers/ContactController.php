@@ -86,6 +86,7 @@ class ContactController extends Controller
 
     public function uploadImage(Request $request)
     {
+
        $contact = Contact::findOrFail($request['id']);
 
         Storage::disk('public')->deleteDirectory('/images/avatars/' . $request['id']);
