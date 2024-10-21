@@ -9,6 +9,7 @@
     @vite(['resources/js/app.js','resources/scss/style.scss'])
   <body>
   <div id="app">
+      325252
   </div>
   </body>
 </html>
