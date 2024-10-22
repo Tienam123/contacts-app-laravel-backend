@@ -2,14 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ContactsResourse;
+use App\Http\Requests\Contacts\ContactRequest;
+use App\Http\Resources\Contacts\ContactsResourse;
+use App\Http\UseCases\Contacts\ContactService;
 use App\Models\Contact;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Storage;
 
 class ContactController extends Controller
 {
+    private ContactService $contactService;
+
+    public function __construct(ContactService $contactService)
+    {
+        $this->contactService = $contactService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -18,7 +27,7 @@ class ContactController extends Controller
         $limit = $request['limit'] ?? 5;
         $items = Contact::paginate($limit);
         return response()->json([
-            'data' => $items->items(),
+            'data' => ContactsResourse::collection($items->items()),
             'meta' => [
                 'current_page' => $items->currentPage(),
                 'last_page' => $items->lastPage(),
@@ -36,30 +45,22 @@ class ContactController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-
-
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ContactRequest $request)
     {
 
-        $data = [
-            'name' => $request['name'],
-            'surname' => $request['surname'],
-            'email' => $request['email'],
-            'phone' => $request['phone'],
-            'image' => '',
-            'is_favorite' => false,
-        ];
-        Contact::create($data);
-        return response()->json($data);
+        $data = $request->validated();
+
+        $contact = Contact::create($data);
+
+        if ($request->hasFile('image')) {
+            $url = $this->contactService->uploadImg($contact->id, $request->file('image'));
+            $contact->image = $url;
+            $contact->save();
+        }
+
+        return response(ContactsResourse::make($contact)->resolve(), 201);
     }
 
     /**
@@ -67,23 +68,29 @@ class ContactController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $contact = Contact::find($id);
+
+        if ($contact) {
+            return ContactsResourse::make($contact)->resolve();
+        } else {
+            return response()->json(['message' => 'Contact not found'], 404);
+        }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ContactRequest $request, string $id)
     {
-        //
+        $data = $request->validated();
+        $contact = Contact::find($id);
+        if ($contact) {
+            $contact->update($data);
+            return ContactsResourse::make($contact)->resolve();
+        } else {
+            return response()->json(['message' => 'Contact not found'], 404);
+        }
     }
 
     /**
@@ -91,22 +98,19 @@ class ContactController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $contact = Contact::find($id);
+        if ($contact) {
+            $contact->delete();
+            return response()->noContent();
+        } else {
+            return response()->json(['message' => 'Contact not found'], 404);
+        }
     }
 
-    public function uploadImage(Request $request)
+    public function updateUserImage(Request $request)
     {
-
-        $contact = Contact::findOrFail($request['id']);
-
-        Storage::disk('public')->deleteDirectory('/images/avatars/' . $request['id']);
-        $path = Storage::disk('public')->put('/images/avatars/' . $request['id'], $request->file('image'));
-
-        if ($contact) {
-            $contact->image = $path;
-            $contact->save();
+        if ($request->hasFile('image')) {
+            return $this->contactService->uploadImg();
         }
-
-        return url('storage/' . $path);
     }
 }
