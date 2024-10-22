@@ -22,6 +22,6 @@ class SendVerificationMail
      */
     public function handle(RegisterUser $user): void
     {
-        Mail::to('dr.tienam123@gmail.com')->send(new UserRegistered($user->user));
+        Mail::to($user->user->email)->send(new UserRegistered($user->user));
     }
 }

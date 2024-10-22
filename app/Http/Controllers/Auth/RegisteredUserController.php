@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Events\Auth\RegisterUser;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendEmailJob;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
@@ -27,8 +28,7 @@ class RegisteredUserController extends Controller
         ]);
 
         $user = User::new($data);
-
-        event(new RegisterUser($user));
+        SendEmailJob::dispatch($user);
 
         return response()->json([
             'user' => $user,
