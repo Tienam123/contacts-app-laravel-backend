@@ -1,7 +1,7 @@
 <p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
 
 
-## About Project
+## О проекте
 
 ContactsApp — это удобное приложение для управления вашими контактами с простым и интуитивно понятным интерфейсом. Мы стремимся сделать процесс организации ваших контактов быстрым и легким, предоставляя вам инструменты, которые делают управление контактами удобным и эффективным. В нашем приложении реализованы такие функции, как:
 
@@ -21,7 +21,7 @@ ContactsApp — это удобное приложение для управле
 
 ## Routes :
 
-- `contacts.hws.dp.ua/api/user` - return current user
+- `GET` `contacts.hws.dp.ua/api/user` - return current user
 ```javascript
 {
     "id": 2,
@@ -34,7 +34,7 @@ ContactsApp — это удобное приложение для управле
 }
 ```
 
-- `contacts.hws.dp.ua/login` - login user
+- `POST` `contacts.hws.dp.ua/login` - login user
 ```javascript
 {
     "status": true,
@@ -51,7 +51,7 @@ ContactsApp — это удобное приложение для управле
     "token": "3|AvkbGdGKhRM9KCTrZzROAogTP0gzuTZc8WsQ8v7w64fdba2b"
 }
 ```
-- `contacts.hws.dp.ua/register` - register user
+-  `POST`  `contacts.hws.dp.ua/register` - register user
 ```javascript
 {
     "user": {
@@ -65,7 +65,7 @@ ContactsApp — это удобное приложение для управле
 }
 ```
 
-- `contacts.hws.dp.ua/api/contacts` - get all contacts
+- `GET` `contacts.hws.dp.ua/api/contacts` -  get all contacts
 ```javascript
 
 {
@@ -96,7 +96,7 @@ ContactsApp — это удобное приложение для управле
 ```
 
 
-- `contacts.hws.dp.ua/api/contacts/id` - get contact by ID
+- `GET` `contacts.hws.dp.ua/api/contacts/id` -  get contact by ID
 ```javascript
 {
     "id": 1,
@@ -109,3 +109,16 @@ ContactsApp — это удобное приложение для управле
 }
 ```
 
+
+- `POST` `contacts.hws.dp.ua/api/contacts/` -  create contact
+```javascript
+{
+    "id": 3,
+        "name": "Vladyslav",
+        "surname": null,
+        "phone": "+39752323",
+        "email": "dr.tienam23@gmail.com",
+        "image": "",
+        "is_favorite": false
+}
+```
