@@ -11,4 +11,10 @@ class Contact extends Model
 
     protected $table = 'contacts';
     protected $fillable = ['name', 'email', 'phone', 'surname', 'image', 'is_favorite'];
+
+
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 }
