@@ -25,7 +25,7 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $limit = $request['limit'] ?? 5;
-        $items = Contact::paginate($limit);
+        $items = Contact::where('id','=',auth()->user()->id)->paginate($limit);
         return response()->json([
             'data' => ContactsResourse::collection($items->items()),
             'meta' => [
@@ -52,7 +52,13 @@ class ContactController extends Controller
 
         $data = $request->validated();
 
-        $contact = Contact::create($data);
+        $contact = Contact::create([
+            'user_id' => auth()->user()->id,
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'phone' => $data['phone'],
+            'is_favorite' => false
+        ]);
 
         if ($request->hasFile('image')) {
             $url = $this->contactService->uploadImg($contact->id, $request->file('image'));
@@ -60,7 +66,7 @@ class ContactController extends Controller
             $contact->save();
         }
 
-        return response(ContactsResourse::make($contact)->resolve(), 201);
+        return response(ContactsResourse::make($contact)->resolve(),201);
     }
 
     /**

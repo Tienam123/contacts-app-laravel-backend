@@ -10,7 +10,7 @@ class Contact extends Model
     use HasFactory;
 
     protected $table = 'contacts';
-    protected $fillable = ['name', 'email', 'phone', 'surname', 'image', 'is_favorite'];
+    protected $fillable = ['name', 'user_id','email', 'phone', 'surname', 'image', 'is_favorite'];
 
 
     public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
