@@ -10,7 +10,8 @@
 <body>
    <h1>Добро пожаловать {{$user->name}}</h1>
    Перейдите пожалуйста по ссылке ниже для подтверждения вашего аккаунта
-   <a href="{{route('verification.verify',['id'=>$user->id,'hash'=>\Illuminate\Support\Str::random(16)])}}">{{\Illuminate\Support\Str::random(16)}}</a>
+
+   <a href="{{route('verification.verify',['id'=>$user->id,'hash'=>$user->verification_token]}}>{{$user->verification_token}}</a>
 
    Если вы не регистрироввали аккаунт , просто проигнорируйте это сообщение
 

@@ -23,6 +23,7 @@ class User extends Authenticatable
         'email',
         'phone',
         'password',
+        'verification_token'
     ];
 
     /**
@@ -59,7 +60,9 @@ class User extends Authenticatable
         return self::create([
             'name' => $data['name'],
             'email' => $data['email'],
+            'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
+            'verification_token' => Hash::make($data['name']),
         ]);
     }
 

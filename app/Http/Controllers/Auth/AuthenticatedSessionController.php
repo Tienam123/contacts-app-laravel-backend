@@ -22,15 +22,18 @@ class AuthenticatedSessionController extends Controller
     {
         $request->authenticate();
         $user = User::where('email', '=', $request->email)->first();
-        if ($user) {
-            $user->tokens()->delete();
-            $token = $user->createToken('auth_token');
+
+        if (is_null($user)) {
+            return response()->json(['status' => 404, 'message' => 'User Not Found'], 404);
         }
+
+        $user->tokens()->delete();
+        $token = $user->createToken('auth_token');
 
         return response()->json([
             'status' => true,
             'message' => 'Login Successful',
-            'name' =>auth()->user(),
+            'name' => auth()->user(),
             'token' => $token->plainTextToken,
         ]);
 
@@ -42,12 +45,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request): Response
     {
-        Auth::guard('web')->logout();
+       $user = auth()->user();
+//        $request->session()->invalidate();
+//        $request->session()->regenerateToken();
 
-        $request->session()->invalidate();
-
-        $request->session()->regenerateToken();
-
-        return response()->noContent();
+        return response()->json($user);
     }
 }

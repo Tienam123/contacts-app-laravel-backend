@@ -25,7 +25,7 @@ class ContactController extends Controller
     public function index(Request $request)
     {
         $limit = $request['limit'] ?? 5;
-        $items = Contact::where('id','=',auth()->user()->id)->paginate($limit);
+        $items = Contact::where('user_id','=',auth()->user()->id)->paginate($limit);
         return response()->json([
             'data' => ContactsResourse::collection($items->items()),
             'meta' => [
